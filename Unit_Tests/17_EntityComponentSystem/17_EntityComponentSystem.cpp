@@ -46,7 +46,8 @@
 #include "../../../../Common_3/Utilities/RingBuffer.h"
 
 // Math
-#include "../../../../Common_3/Utilities/Math/MathTypes.h"
+#include "Forge/Core/TF_Math.h"
+
 
 #include "../../../../Common_3/Utilities/Interfaces/IMemory.h" // Must be the last include in a cpp file
 

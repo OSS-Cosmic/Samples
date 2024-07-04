@@ -27,7 +27,8 @@
 #include "../../../../Common_3/Application/Interfaces/IInput.h"
 #include "../../../../Common_3/Utilities/Interfaces/ILog.h"
 
-#include "../../../../Common_3/Utilities/Math/MathTypes.h"
+#include "Forge/Core/TF_Math.h"
+
 
 // Defined here because this is shared by the Main and Game projects.
 // Ideally it should be placed in some configuration file and disabled when not compiling with the editor.

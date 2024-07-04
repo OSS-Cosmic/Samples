@@ -40,7 +40,7 @@
 #include "../../../../Common_3/Utilities/Interfaces/IThread.h"
 #include "../../../../Common_3/Utilities/Interfaces/ITime.h"
 
-#include "../../../../Common_3/Utilities/Math/MathTypes.h"
+#include "Forge/Core/TF_Math.h"
 #include "../../../../Common_3/Utilities/RingBuffer.h"
 #include "../../../../Common_3/Utilities/Threading/ThreadSystem.h"
 

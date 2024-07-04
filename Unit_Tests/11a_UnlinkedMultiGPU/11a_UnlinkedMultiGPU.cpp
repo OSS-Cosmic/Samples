@@ -48,7 +48,7 @@
 
 // Math
 #include "../../../../Common_3/Resources/ResourceLoader/TextureContainers.h"
-#include "../../../../Common_3/Utilities/Math/MathTypes.h"
+#include "Forge/Core/TF_Math.h"
 #include "../../../../Middleware_3/PaniniProjection/Panini.h"
 
 #include "../../../../Common_3/Utilities/Interfaces/IMemory.h"

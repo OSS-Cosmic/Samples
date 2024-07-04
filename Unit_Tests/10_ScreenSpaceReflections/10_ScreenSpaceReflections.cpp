@@ -45,7 +45,7 @@
 #include "../../../../Common_3/Utilities/Threading/Atomics.h"
 
 // Math
-#include "../../../../Common_3/Utilities/Math/MathTypes.h"
+#include "Forge/Core/TF_Math.h"
 
 // Input
 #include "../../../../Common_3/Utilities/Threading/ThreadSystem.h"

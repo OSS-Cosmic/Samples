@@ -28,7 +28,7 @@
 #define NUM_SDF_MESHES       3
 #define MAX_BLUR_KERNEL_SIZE 16
 
-#include "../../../../Common_3/Utilities/ThirdParty/OpenSource/Nothings/stb_ds.h"
+#include "Nothings/stb_ds.h"
 
 // hint
 #define STB_DS_ARRAY(x)   x*
@@ -51,12 +51,12 @@
 #include "../../../../Common_3/Utilities/Interfaces/IThread.h"
 #include "../../../../Common_3/Utilities/Interfaces/ITime.h"
 
-#include "../../../../Common_3/Utilities/Math/MathTypes.h"
+#include "Forge/Core/TF_Math.h"
 #include "../../../../Common_3/Utilities/RingBuffer.h"
 #include "../../../../Common_3/Utilities/Threading/ThreadSystem.h"
 
 // Math
-#include "../../../../Common_3/Utilities/Math/MathTypes.h"
+#include "Forge/Core/TF_Math.h"
 #include "../../../../Common_3/Utilities/Math/ShaderUtilities.h"
 
 // clang-format off

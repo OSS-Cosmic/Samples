@@ -59,7 +59,7 @@
 #include "../../../../Common_3/Resources/AnimationSystem/Animation/SkeletonBatcher.h"
 
 // Math
-#include "../../../../Common_3/Utilities/Math/MathTypes.h"
+#include "Forge/Core/TF_Math.h"
 #include "../../../../Common_3/Utilities/Threading/ThreadSystem.h"
 
 // Memory

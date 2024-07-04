@@ -22,7 +22,7 @@
  * under the License.
  */
 
-#include "../../../../Common_3/Utilities/ThirdParty/OpenSource/Nothings/stb_ds.h"
+#include "Nothings/stb_ds.h"
 #include "../../../../Common_3/Utilities/ThirdParty/OpenSource/bstrlib/bstrlib.h"
 
 #include "../../../../Common_3/Application/Interfaces/IApp.h"
@@ -1526,8 +1526,7 @@ public:
             LabelWidget labelWidget = {};
             gAppSettings.pOutputSupportsHDRWidget =
                 uiCreateComponentWidget(pGuiWindow, "Output Supports HDR", &labelWidget, WIDGET_TYPE_LABEL);
-            REGISTER_LUA_WIDGET(gAppSettings.pOutputSupportsHDRWidget);
-
+                
             static const char* outputModeNames[] = { "SDR", "HDR10" };
 
             DropdownWidget outputMode;

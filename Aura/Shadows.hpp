@@ -16,7 +16,7 @@
 #ifndef Shadows_hpp
 #define Shadows_hpp
 
-#include "../../../Common_3/Utilities/Math/MathTypes.h"
+#include "Forge/Core/TF_Math.h"
 
 #include "Camera.hpp"
 

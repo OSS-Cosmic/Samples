@@ -35,7 +35,6 @@
 #include "Common_3/Application/Interfaces/IProfiler.h"
 #include "Common_3/Application/Interfaces/IScreenshot.h"
 #include "Common_3/Application/Interfaces/IUI.h"
-#include "Common_3/Game/Interfaces/IScripting.h"
 #include "Common_3/Utilities/Interfaces/IFileSystem.h"
 #include "Common_3/Utilities/Interfaces/ILog.h"
 #include "Common_3/Utilities/Interfaces/ITime.h"
@@ -47,7 +46,8 @@
 #include "Common_3/Resources/ResourceLoader/Interfaces/IResourceLoader.h"
 
 // Math
-#include "Common_3/Utilities/Math/MathTypes.h"
+#include "Forge/Core/TF_Math.h"
+#include "Forge/Graphics/TF_GPUConfig.h"
 
 #include "Common_3/Utilities/Interfaces/IMemory.h"
 
@@ -90,6 +90,7 @@ const float    gRotSelfScale = 0.0004f;
 const float    gRotOrbitYScale = 0.001f;
 const float    gRotOrbitZScale = 0.00001f;
 
+RendererContext* context;
 Renderer* pRenderer = NULL;
 
 Queue*     pGraphicsQueue = NULL;
@@ -176,7 +177,7 @@ void reloadRequest(void*)
     requestReload(&reload);
 }
 
-const char* gWindowTestScripts[] = { "TestFullScreen.lua", "TestCenteredWindow.lua", "TestNonCenteredWindow.lua", "TestBorderless.lua" };
+// const char* gWindowTestScripts[] = { "TestFullScreen.lua", "TestCenteredWindow.lua", "TestNonCenteredWindow.lua", "TestBorderless.lua" };
 
 static void add_attribute(VertexLayout* layout, ShaderSemantic semantic, TinyImageFormat format, uint32_t offset)
 {
@@ -441,18 +442,55 @@ public:
         fsSetPathForResourceDir(pSystemFileIO, RM_DEBUG, RD_SCREENSHOTS, "Screenshots");
         fsSetPathForResourceDir(pSystemFileIO, RM_CONTENT, RD_SCRIPTS, "Scripts");
         fsSetPathForResourceDir(pSystemFileIO, RM_DEBUG, RD_DEBUG, "Debug");
+        fsSetPathForResourceDir(pSystemFileIO, RM_CONTENT, RD_GPU_CONFIG, "GPUCfg");
 
         // window and renderer setup
-        RendererDesc settings;
-        memset(&settings, 0, sizeof(settings));
-        settings.mD3D11Supported = true;
-        settings.mGLESSupported = true;
+        RendererContextDesc rendererContextDesc = {0};
+        rendererContextDesc.mApi = RendererApi::RENDERER_API_VULKAN;
+        initRendererContext("01_Transform", &rendererContextDesc, &context);
+  
+        struct GPUConfiguration def = {0};
+        tfInitGPUConfiguration(&def);
+
+        {
+            FileStream fh = {};
+            if (!fsOpenStreamFromPath(RD_GPU_CONFIG, "gpu.data", FM_READ, &fh))
+            {
+                LOGF(LogLevel::eWARNING, "gpu.data could not be found, setting preset will be set to Low as a default.");
+            }
+            size_t fileSize = fsGetStreamFileSize(&fh);
+            char*  buffer = (char*)tf_malloc(fileSize * sizeof(char));
+            fsReadFromStream(&fh, (void*)buffer, fileSize);
+            tfLoadGPUData(&def, { buffer, fileSize });
+            tf_free(buffer);
+        }
+        {
+            FileStream fh = {};
+            if (!fsOpenStreamFromPath(RD_GPU_CONFIG, "gpu.cfg", FM_READ, &fh))
+            {
+                LOGF(LogLevel::eWARNING, "gpu.data could not be found, setting preset will be set to Low as a default.");
+            }
+            size_t fileSize = fsGetStreamFileSize(&fh);
+            char*  buffer = (char*)tf_malloc(fileSize * sizeof(char));
+            fsReadFromStream(&fh, (void*)buffer, fileSize);
+            tfLoadGPUConfig(&def, { buffer, fileSize });
+            tf_free(buffer);
+        }
+
+
+        GpuSelection selection = tfApplyGPUConfig(&def, context);
+        RendererDesc settings = {0};
+        settings.pContext = context;
+        settings.pSelectedDevice = selection.device;
+        settings.mProperties = selection.properties;
         initRenderer(GetName(), &settings, &pRenderer);
+        
+        tfFreeGPUConfiguration(&def);
         // check for init success
         if (!pRenderer)
             return false;
 
-        if (pRenderer->pGpu->mSettings.mPipelineStatsQueries)
+        if (pRenderer->pProperties->mPipelineStatsQueries)
         {
             QueryPoolDesc poolDesc = {};
             poolDesc.mQueryCount = 3; // The count is 3 due to quest & multi-view use otherwise 2 is enough as we use 2 queries.
@@ -565,7 +603,7 @@ public:
         UIWidget* pVLw = uiCreateComponentWidget(pGuiWindow, "Vertex Layout", &vertexLayoutWidget, WIDGET_TYPE_SLIDER_UINT);
         uiSetWidgetOnEditedCallback(pVLw, nullptr, reloadRequest);
 
-        if (pRenderer->pGpu->mSettings.mPipelineStatsQueries)
+        if (pRenderer->pProperties->mPipelineStatsQueries)
         {
             static float4     color = { 1.0f, 1.0f, 1.0f, 1.0f };
             DynamicTextWidget statsWidget;
@@ -574,11 +612,11 @@ public:
             uiCreateComponentWidget(pGuiWindow, "Pipeline Stats", &statsWidget, WIDGET_TYPE_DYNAMIC_TEXT);
         }
 
-        const uint32_t numScripts = TF_ARRAY_COUNT(gWindowTestScripts);
-        LuaScriptDesc  scriptDescs[numScripts] = {};
-        for (uint32_t i = 0; i < numScripts; ++i)
-            scriptDescs[i].pScriptFileName = gWindowTestScripts[i];
-        DEFINE_LUA_SCRIPTS(scriptDescs, numScripts);
+        // const uint32_t numScripts = TF_ARRAY_COUNT(gWindowTestScripts);
+        // LuaScriptDesc  scriptDescs[numScripts] = {};
+        // for (uint32_t i = 0; i < numScripts; ++i)
+        //     scriptDescs[i].pScriptFileName = gWindowTestScripts[i];
+        // DEFINE_LUA_SCRIPTS(scriptDescs, numScripts);
 
         waitForAllResourceLoads();
 
@@ -819,7 +857,7 @@ public:
         {
             removeResource(pProjViewUniformBuffer[i]);
             removeResource(pSkyboxUniformBuffer[i]);
-            if (pRenderer->pGpu->mSettings.mPipelineStatsQueries)
+            if (pRenderer->pProperties->mPipelineStatsQueries)
             {
                 removeQueryPool(pRenderer, pPipelineStatsQueryPool[i]);
             }
@@ -1015,7 +1053,7 @@ public:
         // Reset cmd pool for this frame
         resetCmdPool(pRenderer, elem.pCmdPool);
 
-        if (pRenderer->pGpu->mSettings.mPipelineStatsQueries)
+        if (pRenderer->pProperties->mPipelineStatsQueries)
         {
             QueryData data3D = {};
             QueryData data2D = {};
@@ -1046,7 +1084,7 @@ public:
         beginCmd(cmd);
 
         cmdBeginGpuFrameProfile(cmd, gGpuProfileToken);
-        if (pRenderer->pGpu->mSettings.mPipelineStatsQueries)
+        if (pRenderer->pProperties->mPipelineStatsQueries)
         {
             cmdResetQuery(cmd, pPipelineStatsQueryPool[gFrameIndex], 0, 2);
             QueryDesc queryDesc = { 0 };
@@ -1093,7 +1131,7 @@ public:
         cmdEndGpuTimestampQuery(cmd, gGpuProfileToken); // Draw Skybox/Planets
         cmdBindRenderTargets(cmd, NULL);
 
-        if (pRenderer->pGpu->mSettings.mPipelineStatsQueries)
+        if (pRenderer->pProperties->mPipelineStatsQueries)
         {
             QueryDesc queryDesc = { 0 };
             cmdEndQuery(cmd, pPipelineStatsQueryPool[gFrameIndex], &queryDesc);
@@ -1126,7 +1164,7 @@ public:
 
         cmdEndGpuFrameProfile(cmd, gGpuProfileToken);
 
-        if (pRenderer->pGpu->mSettings.mPipelineStatsQueries)
+        if (pRenderer->pProperties->mPipelineStatsQueries)
         {
             QueryDesc queryDesc = { 1 };
             cmdEndQuery(cmd, pPipelineStatsQueryPool[gFrameIndex], &queryDesc);

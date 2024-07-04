@@ -41,7 +41,7 @@
 #include "../../../../Common_3/Utilities/Threading/ThreadSystem.h"
 
 // Math
-#include "../../../../Common_3/Utilities/Math/MathTypes.h"
+#include "Forge/Core/TF_Math.h"
 #include "../../../../Common_3/Utilities/Math/ShaderUtilities.h"
 #include "Shaders/Shared.h"
 

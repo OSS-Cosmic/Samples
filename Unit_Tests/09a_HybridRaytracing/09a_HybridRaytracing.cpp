@@ -45,7 +45,7 @@
 #include "../../../../Common_3/Utilities/RingBuffer.h"
 
 // Math
-#include "../../../../Common_3/Utilities/Math/MathTypes.h"
+#include "Forge/Core/TF_Math.h"
 #include "../../../../Common_3/Utilities/Math/ShaderUtilities.h"
 
 // ui
@@ -860,7 +860,6 @@ if (pRenderer->pGpu->mSettings.mGpuMarkers)
         UIWidget*      pCrashButton = uiCreateComponentWidget(pGuiWindow, label, &crashButton, WIDGET_TYPE_BUTTON);
         WidgetCallback crashCallback = [](void* pUserData) { bCrashedSteps[*(uint32_t*)pUserData] = true; };
         uiSetWidgetOnEditedCallback(pCrashButton, &renderingStepIndices[i], crashCallback);
-        REGISTER_LUA_WIDGET(pCrashButton);
     }
 }
 

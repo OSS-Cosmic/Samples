@@ -50,7 +50,7 @@
 #include "../../../../Common_3/Utilities/RingBuffer.h"
 
 // Math
-#include "../../../../Common_3/Utilities/Math/MathTypes.h"
+#include "Forge/Core/TF_Math.h"
 
 // input
 //  Animations

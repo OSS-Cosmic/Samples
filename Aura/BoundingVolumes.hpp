@@ -13,7 +13,7 @@
  *
  */
 
-#include "../../../Common_3/Utilities/Math/MathTypes.h"
+#include "Forge/Core/TF_Math.h"
 
 #ifndef AxisAlignedBoundingBox_h
 #define AxisAlignedBoundingBox_h

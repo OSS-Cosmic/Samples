@@ -27,7 +27,7 @@
 
 #define MAX_MESH_NAME_LEN 128
 
-#include "../../../Common_3/Utilities/Math/MathTypes.h"
+#include "Forge/Core/TF_Math.h"
 
 #include "SanMiguel.h"
 /************************************************************************/

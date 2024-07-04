@@ -1043,7 +1043,6 @@ public:
         {
             LabelWidget labelWidget = {};
             pOutputSupportsHDRWidget = uiCreateComponentWidget(pGuiWindow, "Output Supports HDR", &labelWidget, WIDGET_TYPE_LABEL);
-            REGISTER_LUA_WIDGET(pOutputSupportsHDRWidget);
 
             static const char* outputModeNames[] = { "SDR", "HDR10" };
 
