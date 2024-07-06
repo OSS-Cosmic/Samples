@@ -90,8 +90,8 @@ const float    gRotSelfScale = 0.0004f;
 const float    gRotOrbitYScale = 0.001f;
 const float    gRotOrbitZScale = 0.00001f;
 
-RendererContext* context;
-Renderer* pRenderer = NULL;
+RendererContext* pContext = NULL;
+Renderer*        pRenderer = NULL;
 
 Queue*     pGraphicsQueue = NULL;
 GpuCmdRing gGraphicsCmdRing = {};
@@ -326,7 +326,7 @@ static void generate_complex_mesh()
             {
                 uint16_t* quadIndices = indices[i][x][y];
 
-#define vid(vx, vy) (o + (vx)*DETAIL_LEVEL + (vy))
+#define vid(vx, vy) (o + (vx) * DETAIL_LEVEL + (vy))
                 quadIndices[0] = vid(x, y);
                 quadIndices[1] = vid(x, y + 1);
                 quadIndices[2] = vid(x + 1, y + 1);
@@ -445,11 +445,11 @@ public:
         fsSetPathForResourceDir(pSystemFileIO, RM_CONTENT, RD_GPU_CONFIG, "GPUCfg");
 
         // window and renderer setup
-        RendererContextDesc rendererContextDesc = {0};
+        RendererContextDesc rendererContextDesc = { 0 };
         rendererContextDesc.mApi = RendererApi::RENDERER_API_VULKAN;
-        initRendererContext("01_Transform", &rendererContextDesc, &context);
-  
-        struct GPUConfiguration def = {0};
+        initRendererContext(GetName(), &rendererContextDesc, &pContext);
+
+        struct GPUConfiguration def = { 0 };
         tfInitGPUConfiguration(&def);
 
         {
@@ -477,14 +477,13 @@ public:
             tf_free(buffer);
         }
 
-
-        GpuSelection selection = tfApplyGPUConfig(&def, context);
-        RendererDesc settings = {0};
-        settings.pContext = context;
-        settings.pSelectedDevice = selection.device;
-        settings.mProperties = selection.properties;
+        GPUConfigSelection selection = tfApplyGPUConfig(&def, pContext);
+        RendererDesc settings = { 0 };
+        settings.pContext = pContext;
+        settings.pSelectedDevice = selection.mDeviceAdapter;
+        settings.mProperties = selection.mGpuProperty;
         initRenderer(GetName(), &settings, &pRenderer);
-        
+
         tfFreeGPUConfiguration(&def);
         // check for init success
         if (!pRenderer)
@@ -785,7 +784,7 @@ public:
             return true;
         };
 
-        typedef bool (*CameraInputHandler)(InputActionContext * ctx, DefaultInputActions::DefaultInputAction action);
+        typedef bool (*CameraInputHandler)(InputActionContext* ctx, DefaultInputActions::DefaultInputAction action);
         static CameraInputHandler onCameraInput = [](InputActionContext* ctx, DefaultInputActions::DefaultInputAction action)
         {
             if (*(ctx->pCaptured))
@@ -878,7 +877,9 @@ public:
         removeQueue(pRenderer, pGraphicsQueue);
 
         exitRenderer(pRenderer);
+        exitRendererContext(pContext);
         pRenderer = NULL;
+        pContext = NULL;
     }
 
     bool Load(ReloadDesc* pReloadDesc)
