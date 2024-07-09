@@ -445,8 +445,9 @@ public:
         fsSetPathForResourceDir(pSystemFileIO, RM_CONTENT, RD_GPU_CONFIG, "GPUCfg");
 
         // window and renderer setup
-        RendererContextDesc rendererContextDesc = { 0 };
-        rendererContextDesc.mApi = RendererApi::RENDERER_API_VULKAN;
+        RendererContextDesc rendererContextDesc = {};
+        memset(&rendererContextDesc, 0, sizeof(RendererContextDesc));
+        rendererContextDesc.mApi = (RendererApi)mSettings.mSelectedAPI;
         initRendererContext(GetName(), &rendererContextDesc, &pContext);
 
         struct GPUConfiguration def = { 0 };
@@ -478,7 +479,8 @@ public:
         }
 
         GPUConfigSelection selection = tfApplyGPUConfig(&def, pContext);
-        RendererDesc settings = { 0 };
+        RendererDesc settings;
+        memset(&settings, 0, sizeof(RendererDesc));
         settings.pContext = pContext;
         settings.pSelectedDevice = selection.mDeviceAdapter;
         settings.mProperties = selection.mGpuProperty;
