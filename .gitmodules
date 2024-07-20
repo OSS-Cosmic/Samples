@@ -1,0 +1,6 @@
+[submodule "TF"]
+	path = TF
+	url = git@github.com:OSS-Cosmic/TF.git
+[submodule "TFSamples-Media"]
+	path = TFSamples-Media
+	url = git@github.com:OSS-Cosmic/TFSamples-Media.git
