@@ -36,7 +36,7 @@
 #include "Forge/Graphics/TF_Graphics.h"
 #include "../../../../Common_3/Renderer/Interfaces/IVisibilityBuffer.h"
 #include "../../../../Common_3/Utilities/Interfaces/IFileSystem.h"
-#include "../../../../Common_3/Utilities/Interfaces/ILog.h"
+#include "Forge/Core/TF_Log.h"
 #include "Forge/Core/TF_Thread.h"
 #include "Forge/Core/TF_Time.h"
 

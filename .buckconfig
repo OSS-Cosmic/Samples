@@ -8,10 +8,8 @@
 
 [cell_aliases]
   config = prelude
-  ovr_config = prelude
   fbcode = none
   fbsource = none
-  fbcode_macros = none
   buck = none
 
 [external_cells]
@@ -26,7 +24,7 @@
   target_platform_detector_spec = target:root//...->prelude//platforms:default
 
 [build]
-  execution_platforms = prelude//platforms:default
+  execution_platforms = tf_platform//:default
 
 [project]
   ignore = .git

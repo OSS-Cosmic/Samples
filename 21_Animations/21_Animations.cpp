@@ -41,7 +41,7 @@
 #include "../../../../Common_3/Application/Interfaces/IUI.h"
 #include "../../../../Common_3/Game/Interfaces/IScripting.h"
 #include "../../../../Common_3/Utilities/Interfaces/IFileSystem.h"
-#include "../../../../Common_3/Utilities/Interfaces/ILog.h"
+#include "Forge/Core/TF_Log.h"
 #include "Forge/Core/TF_Time.h"
 
 // Rendering

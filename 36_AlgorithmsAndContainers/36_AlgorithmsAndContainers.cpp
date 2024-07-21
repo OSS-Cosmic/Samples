@@ -29,7 +29,7 @@
 #include "../../../../Common_3/Application/Interfaces/IFont.h"
 #include "../../../../Common_3/Application/Interfaces/IInput.h"
 #include "../../../../Common_3/Application/Interfaces/IUI.h"
-#include "../../../../Common_3/Utilities/Interfaces/ILog.h"
+#include "Forge/Core/TF_Log.h"
 
 #include "AlgorithmsTest.h"
 

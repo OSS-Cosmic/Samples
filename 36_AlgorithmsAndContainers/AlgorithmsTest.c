@@ -22,7 +22,7 @@
  * under the License.
  */
 
-#include "../../../../Common_3/Utilities/Interfaces/ILog.h"
+#include "Forge/Core/TF_Log.h"
 
 #include "../../../../Common_3/Utilities/Math/Algorithms.h"
 
