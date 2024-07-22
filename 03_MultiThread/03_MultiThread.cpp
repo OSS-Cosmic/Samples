@@ -24,32 +24,32 @@
 
 #define _USE_MATH_DEFINES
 
-#include "../../../../Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/tinyimageformat/tinyimageformat_query.h"
+#include "tinyimageformat/tinyimageformat_query.h"
 
 // Interfaces
-#include "../../../../Common_3/Application/Interfaces/IApp.h"
-#include "../../../../Common_3/Application/Interfaces/ICameraController.h"
-#include "../../../../Common_3/Application/Interfaces/IFont.h"
-#include "../../../../Common_3/Application/Interfaces/IInput.h"
-#include "../../../../Common_3/Application/Interfaces/IProfiler.h"
-#include "../../../../Common_3/Application/Interfaces/IScreenshot.h"
-#include "../../../../Common_3/Application/Interfaces/IUI.h"
-#include "../../../../Common_3/Game/Interfaces/IScripting.h"
-#include "../../../../Common_3/Utilities/Interfaces/IFileSystem.h"
+#include "Common_3/Application/Interfaces/IApp.h"
+#include "Common_3/Application/Interfaces/ICameraController.h"
+#include "Common_3/Application/Interfaces/IFont.h"
+#include "Common_3/Application/Interfaces/IInput.h"
+#include "Common_3/Application/Interfaces/IProfiler.h"
+#include "Common_3/Application/Interfaces/IScreenshot.h"
+#include "Common_3/Application/Interfaces/IUI.h"
+#include "Common_3/Utilities/Interfaces/IFileSystem.h"
 #include "Forge/Core/TF_Log.h"
 #include "Forge/Core/TF_Thread.h"
 #include "Forge/Core/TF_Time.h"
+#include "Forge/Graphics/TF_GPUConfig.h"
 
 #include "Forge/Core/TF_Math.h"
-#include "../../../../Common_3/Utilities/RingBuffer.h"
-#include "../../../../Common_3/Utilities/Threading/ThreadSystem.h"
+#include "Common_3/Utilities/RingBuffer.h"
+#include "Common_3/Utilities/Threading/ThreadSystem.h"
 
 // for cpu usage query
 #if defined(NX64)
 #endif
 
 #include "Forge/Graphics/TF_Graphics.h"
-#include "../../../../Common_3/Resources/ResourceLoader/Interfaces/IResourceLoader.h"
+#include "Common_3/Resources/ResourceLoader/Interfaces/IResourceLoader.h"
 
 #include "Forge/Core/Mem/TF_Memory.h"
 
@@ -121,6 +121,7 @@ int      gTotalParticleCount = 2000000;
 uint32_t gGraphWidth = 200;
 uint32_t gGraphHeight = 100;
 
+RendererContext* pContext = NULL;
 Renderer* pRenderer = NULL;
 
 Queue*     pGraphicsQueue = NULL;
@@ -199,16 +200,6 @@ ThreadID initialThread;
 
 uint32_t gFontID = 0;
 
-const char* gTestScripts[] = { "Test_TurnOffPlots.lua" };
-uint32_t    gCurrentScriptIndex = 0;
-
-void RunScript(void* pUserData)
-{
-    LuaScriptDesc runDesc = {};
-    runDesc.pScriptFileName = gTestScripts[gCurrentScriptIndex];
-    luaQueueScriptToRun(&runDesc);
-}
-
 class MultiThread: public IApp
 {
 public:
@@ -233,6 +224,7 @@ public:
         fsSetPathForResourceDir(pSystemFileIO, RM_CONTENT, RD_SCRIPTS, "Scripts");
         fsSetPathForResourceDir(pSystemFileIO, RM_DEBUG, RD_SCREENSHOTS, "Screenshots");
         fsSetPathForResourceDir(pSystemFileIO, RM_DEBUG, RD_DEBUG, "Debug");
+        fsSetPathForResourceDir(pSystemFileIO, RM_CONTENT, RD_GPU_CONFIG, "GPUCfg");
 
         if (InitCpuUsage())
             gPerformanceStatsInited = true;
@@ -279,10 +271,24 @@ public:
         gGraphWidth = mSettings.mWidth / 6; // 200;
         gGraphHeight = gCoresCount ? (mSettings.mHeight - 30 - gCoresCount * 10) / gCoresCount : 0;
 
-        // DirectX 11 not supported on this unit test
+        // window and renderer setup
+        RendererContextDesc rendererContextDesc = {};
+        memset(&rendererContextDesc, 0, sizeof(RendererContextDesc));
+        rendererContextDesc.mApi = (RendererApi)mSettings.mSelectedAPI;
+        initRendererContext(GetName(), &rendererContextDesc, &pContext);
+
+        struct GPUConfiguration def = { 0 };
+        tfInitGPUConfiguration(&def);
+        tfBoostrapDefaultGPUConfiguration(&def);
+        GPUConfigSelection selection = tfApplyGPUConfig(&def, pContext);
         RendererDesc settings;
-        memset(&settings, 0, sizeof(settings));
+        memset(&settings, 0, sizeof(RendererDesc));
+        settings.pContext = pContext;
+        settings.pSelectedDevice = selection.mDeviceAdapter;
+        settings.mProperties = selection.mGpuProperty;
+        settings.mProperties.mPipelineStatsQueries = false;
         initRenderer(GetName(), &settings, &pRenderer);
+
         // check for init success
         if (!pRenderer)
             return false;
@@ -477,12 +483,6 @@ public:
         uiRenderDesc.pRenderer = pRenderer;
         initUserInterface(&uiRenderDesc);
 
-        const uint32_t numScripts = sizeof(gTestScripts) / sizeof(gTestScripts[0]);
-        LuaScriptDesc  scriptDescs[numScripts] = {};
-        for (uint32_t i = 0; i < numScripts; ++i)
-            scriptDescs[i].pScriptFileName = gTestScripts[i];
-        luaDefineScripts(scriptDescs, numScripts);
-
         // Initialize profiler
         ProfilerDesc profiler = {};
         profiler.pRenderer = pRenderer;
@@ -505,20 +505,7 @@ public:
         CheckboxWidget threadPlotsBox;
         threadPlotsBox.pData = &bShowThreadsPlot;
         UIWidget* pThreadPlotsBox = uiCreateComponentWidget(pGuiWindow, "Show threads plot", &threadPlotsBox, WIDGET_TYPE_CHECKBOX);
-        luaRegisterWidget(pThreadPlotsBox);
-
 #endif
-        DropdownWidget ddTestScripts;
-        ddTestScripts.pData = &gCurrentScriptIndex;
-        ddTestScripts.pNames = gTestScripts;
-        ddTestScripts.mCount = sizeof(gTestScripts) / sizeof(gTestScripts[0]);
-
-        luaRegisterWidget(uiCreateComponentWidget(pGuiWindow, "Test Scripts", &ddTestScripts, WIDGET_TYPE_DROPDOWN));
-
-        ButtonWidget bRunScript;
-        UIWidget*    pRunScript = uiCreateComponentWidget(pGuiWindow, "Run", &bRunScript, WIDGET_TYPE_BUTTON);
-        uiSetWidgetOnEditedCallback(pRunScript, nullptr, RunScript);
-        luaRegisterWidget(pRunScript);
 
         waitForAllResourceLoads();
         LOGF(LogLevel::eINFO, "Load Time %lld", getHiresTimerUSec(&timer, false) / 1000);

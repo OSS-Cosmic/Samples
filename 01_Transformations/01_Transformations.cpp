@@ -452,32 +452,7 @@ public:
 
         struct GPUConfiguration def = { 0 };
         tfInitGPUConfiguration(&def);
-
-        {
-            FileStream fh = {};
-            if (!fsOpenStreamFromPath(RD_GPU_CONFIG, "gpu.data", FM_READ, &fh))
-            {
-                LOGF(LogLevel::eWARNING, "gpu.data could not be found, setting preset will be set to Low as a default.");
-            }
-            size_t fileSize = fsGetStreamFileSize(&fh);
-            char*  buffer = (char*)tf_malloc(fileSize * sizeof(char));
-            fsReadFromStream(&fh, (void*)buffer, fileSize);
-            tfLoadGPUData(&def, { buffer, fileSize });
-            tf_free(buffer);
-        }
-        {
-            FileStream fh = {};
-            if (!fsOpenStreamFromPath(RD_GPU_CONFIG, "gpu.cfg", FM_READ, &fh))
-            {
-                LOGF(LogLevel::eWARNING, "gpu.data could not be found, setting preset will be set to Low as a default.");
-            }
-            size_t fileSize = fsGetStreamFileSize(&fh);
-            char*  buffer = (char*)tf_malloc(fileSize * sizeof(char));
-            fsReadFromStream(&fh, (void*)buffer, fileSize);
-            tfLoadGPUConfig(&def, { buffer, fileSize });
-            tf_free(buffer);
-        }
-
+        tfBoostrapDefaultGPUConfiguration(&def);
         GPUConfigSelection selection = tfApplyGPUConfig(&def, pContext);
         RendererDesc settings;
         memset(&settings, 0, sizeof(RendererDesc));
