@@ -32,8 +32,8 @@
 #include "../../../Common_3/Game/Interfaces/IScripting.h"
 #include "../../../Common_3/Graphics/Interfaces/IGraphics.h"
 #include "../../../Common_3/Renderer/Interfaces/IVisibilityBuffer2.h"
-#include "../../../Common_3/Utilities/Interfaces/IFileSystem.h"
-#include "Forge/Core/TF_Log.h"
+#include "Forge/TF_FileSystem.h"
+#include "Forge/TF_Log.h"
 #include "../../../Common_3/Utilities/Interfaces/IThread.h"
 #include "../../../Common_3/Utilities/Interfaces/ITime.h"
 

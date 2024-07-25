@@ -40,8 +40,8 @@
 #include "../../../../Common_3/Game/Interfaces/IScripting.h"
 #include "Forge/Graphics/TF_Graphics.h"
 #include "../../../../Common_3/Resources/ResourceLoader/Interfaces/IResourceLoader.h"
-#include "../../../../Common_3/Utilities/Interfaces/IFileSystem.h"
-#include "Forge/Core/TF_Log.h"
+#include "Forge/TF_FileSystem.h"
+#include "Forge/TF_Log.h"
 #include "Forge/Core/TF_Time.h"
 
 #include "../../../../Common_3/Utilities/RingBuffer.h"
@@ -51,7 +51,7 @@
 #include "Forge/Core/TF_Math.h"
 #include "../../../../Middleware_3/PaniniProjection/Panini.h"
 
-#include "Forge/Core/Mem/TF_Memory.h"
+#include "Forge/Mem/TF_Memory.h"
 
 /// Demo structures
 struct PlanetInfoStruct

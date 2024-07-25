@@ -28,7 +28,7 @@
 #define NUM_SDF_MESHES       3
 #define MAX_BLUR_KERNEL_SIZE 16
 
-#include "Nothings/stb_ds.h"
+#include "Forge/3rdparty/stb/stb_ds.h"
 
 // hint
 #define STB_DS_ARRAY(x)   x*
@@ -46,9 +46,9 @@
 #include "Forge/Graphics/TF_Graphics.h"
 #include "../../../../Common_3/Renderer/Interfaces/IVisibilityBuffer.h"
 #include "../../../../Common_3/Resources/ResourceLoader/Interfaces/IResourceLoader.h"
-#include "../../../../Common_3/Utilities/Interfaces/IFileSystem.h"
-#include "Forge/Core/TF_Log.h"
-#include "Forge/Core/TF_Thread.h"
+#include "Forge/TF_FileSystem.h"
+#include "Forge/TF_Log.h"
+#include "Forge/System/TF_Thread.h"
 #include "Forge/Core/TF_Time.h"
 
 #include "Forge/Core/TF_Math.h"
@@ -69,7 +69,7 @@
 #include "../../../Visibility_Buffer/src/SanMiguel.h"
 #include "../../../Visibility_Buffer/src/SanMiguelSDF.h"
 
-#include "Forge/Core/Mem/TF_Memory.h"
+#include "Forge/Mem/TF_Memory.h"
 
 #define Epilson                     (1.e-4f)
 

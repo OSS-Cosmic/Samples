@@ -24,8 +24,8 @@
 
 #include "SanMiguel.h"
 
-#include "../../../Common_3/Utilities/Interfaces/IFileSystem.h"
-#include "Forge/Core/TF_Log.h"
+#include "Forge/TF_FileSystem.h"
+#include "Forge/TF_Log.h"
 
 #include "../../../Common_3/Utilities/Interfaces/IMemory.h"
 

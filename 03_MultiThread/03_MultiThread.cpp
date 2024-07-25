@@ -24,7 +24,7 @@
 
 #define _USE_MATH_DEFINES
 
-#include "tinyimageformat/tinyimageformat_query.h"
+#include "Forge/Graphics/tinyimageformat/tinyimageformat_query.h"
 
 // Interfaces
 #include "Common_3/Application/Interfaces/IApp.h"
@@ -34,9 +34,9 @@
 #include "Common_3/Application/Interfaces/IProfiler.h"
 #include "Common_3/Application/Interfaces/IScreenshot.h"
 #include "Common_3/Application/Interfaces/IUI.h"
-#include "Common_3/Utilities/Interfaces/IFileSystem.h"
-#include "Forge/Core/TF_Log.h"
-#include "Forge/Core/TF_Thread.h"
+#include "Forge/TF_FileSystem.h"
+#include "Forge/TF_Log.h"
+#include "Forge/System/TF_Thread.h"
 #include "Forge/Core/TF_Time.h"
 #include "Forge/Graphics/TF_GPUConfig.h"
 
@@ -51,7 +51,7 @@
 #include "Forge/Graphics/TF_Graphics.h"
 #include "Common_3/Resources/ResourceLoader/Interfaces/IResourceLoader.h"
 
-#include "Forge/Core/Mem/TF_Memory.h"
+#include "Forge/Mem/TF_Memory.h"
 
 // startdust hash function, use this to generate all the seed and update the position of all particles
 #define RND_GEN(x)                  ((x) = (x)*196314165 + 907633515)

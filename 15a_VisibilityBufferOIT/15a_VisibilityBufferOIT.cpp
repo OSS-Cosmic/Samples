@@ -22,7 +22,7 @@
  * under the License.
  */
 
-#include "Nothings/stb_ds.h"
+#include "Forge/stb/stb_ds.h"
 #include "Common_3/Utilities/ThirdParty/OpenSource/bstrlib/bstrlib.h"
 
 #include "../../../../Common_3/Application/Interfaces/IApp.h"
@@ -35,9 +35,9 @@
 #include "../../../../Common_3/Game/Interfaces/IScripting.h"
 #include "Forge/Graphics/TF_Graphics.h"
 #include "../../../../Common_3/Renderer/Interfaces/IVisibilityBuffer.h"
-#include "../../../../Common_3/Utilities/Interfaces/IFileSystem.h"
-#include "Forge/Core/TF_Log.h"
-#include "Forge/Core/TF_Thread.h"
+#include "Forge/TF_FileSystem.h"
+#include "Forge/TF_Log.h"
+#include "Forge/System/TF_Thread.h"
 #include "Forge/Core/TF_Time.h"
 
 #include "../../../../Common_3/Resources/AnimationSystem/Animation/AnimatedObject.h"
@@ -53,7 +53,7 @@
 #define NO_FSL_DEFINITIONS
 #include "Shaders/FSL/shader_defs.h.fsl"
 
-#include "Forge/Core/Mem/TF_Memory.h"
+#include "Forge/Mem/TF_Memory.h"
 
 #define FOREACH_SETTING(X)  \
     X(BindlessSupported, 1) \

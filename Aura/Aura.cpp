@@ -22,8 +22,8 @@
 #include "../../../Common_3/Application/Interfaces/IUI.h"
 #include "../../../Common_3/Graphics/Interfaces/IGraphics.h"
 #include "../../../Common_3/Renderer/Interfaces/IVisibilityBuffer.h"
-#include "../../../Common_3/Utilities/Interfaces/IFileSystem.h"
-#include "Forge/Core/TF_Log.h"
+#include "Forge/TF_FileSystem.h"
+#include "Forge/TF_Log.h"
 #include "../../../Common_3/Utilities/Interfaces/IThread.h"
 #include "../../../Common_3/Utilities/Interfaces/ITime.h"
 

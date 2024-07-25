@@ -25,7 +25,7 @@
 #pragma once
 
 #include "../../../../Common_3/Application/Interfaces/IInput.h"
-#include "Forge/Core/TF_Log.h"
+#include "Forge/TF_Log.h"
 
 #include "Forge/Core/TF_Math.h"
 

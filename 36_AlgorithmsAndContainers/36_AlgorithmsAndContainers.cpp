@@ -29,7 +29,7 @@
 #include "../../../../Common_3/Application/Interfaces/IFont.h"
 #include "../../../../Common_3/Application/Interfaces/IInput.h"
 #include "../../../../Common_3/Application/Interfaces/IUI.h"
-#include "Forge/Core/TF_Log.h"
+#include "Forge/TF_Log.h"
 
 #include "AlgorithmsTest.h"
 
@@ -44,7 +44,7 @@
 #define STBDS_UNIT_TESTS
 #include "../../../../Common_3/Utilities/Math/BStringHashMap.h"
 
-#include "Forge/Core/Mem/TF_Memory.h"
+#include "Forge/Mem/TF_Memory.h"
 
 static const char appName[] = "36_AlgorithmsAndContainers";
 

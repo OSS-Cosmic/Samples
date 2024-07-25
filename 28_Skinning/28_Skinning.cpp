@@ -41,8 +41,8 @@
 #include "../../../../Common_3/Application/Interfaces/IScreenshot.h"
 #include "../../../../Common_3/Application/Interfaces/IUI.h"
 #include "../../../../Common_3/Game/Interfaces/IScripting.h"
-#include "../../../../Common_3/Utilities/Interfaces/IFileSystem.h"
-#include "Forge/Core/TF_Log.h"
+#include "Forge/TF_FileSystem.h"
+#include "Forge/TF_Log.h"
 #include "Forge/Core/TF_Time.h"
 
 // Rendering
@@ -63,7 +63,7 @@
 #include "Forge/Core/TF_Math.h"
 
 // Memory
-#include "Forge/Core/Mem/TF_Memory.h"
+#include "Forge/Mem/TF_Memory.h"
 
 //--------------------------------------------------------------------------------------------
 // RENDERING PIPELINE DATA

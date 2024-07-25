@@ -34,8 +34,8 @@
 #include "../../../../Common_3/Application/Interfaces/IScreenshot.h"
 #include "../../../../Common_3/Application/Interfaces/IUI.h"
 #include "../../../../Common_3/Game/Interfaces/IScripting.h"
-#include "../../../../Common_3/Utilities/Interfaces/IFileSystem.h"
-#include "Forge/Core/TF_Log.h"
+#include "Forge/TF_FileSystem.h"
+#include "Forge/TF_Log.h"
 #include "Forge/Core/TF_Time.h"
 
 // Renderer
@@ -55,7 +55,7 @@
 #endif
 #include "../../../../Common_3/Application/ThirdParty/OpenSource/cr/cr.h"
 
-#include "Forge/Core/Mem/TF_Memory.h"
+#include "Forge/Mem/TF_Memory.h"
 
 // When we don't have hot-reloading we compile the game code to a static library,
 // we need the foward declaration to call the game code and later the linker will link everything.
